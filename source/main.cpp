@@ -2,6 +2,7 @@
 #include "pico/stdlib.h"
 #include "ei_run_classifier.h"
 
+const uint LED_PIN = 25;
 static const float features[] = {196, 61, 82, 204, 50, 84, 228, 56, 92, 273, 280, 284, 287, 287, 287, 294, 287, 288, 288, 287, 293, 285, 139, 62, 58, 257, 80, 44, 229, 81, 68, 50, 232, 258, 102, 91, 73, 67, 73, 197};
 
 
@@ -13,7 +14,7 @@ int raw_feature_get_data(size_t offset, size_t length, float *out_ptr) {
 int main()
 {
     stdio_init_all();
-    const uint LED_PIN = 25;
+
     gpio_init(LED_PIN);
     gpio_set_dir(LED_PIN, GPIO_OUT);
     
