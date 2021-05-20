@@ -1,3 +1,6 @@
 [submodule "ICM20948"]
 	path = ICM20948
 	url = https://github.com/759401524/ICM20948
+[submodule "LCD_st7735"]
+	path = LCD_st7735
+	url = https://github.com/759401524/LCD_st7735

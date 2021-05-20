@@ -8,6 +8,7 @@
 #include <hardware/uart.h>
 #include <pico/stdio_usb.h>
 #include <stdio.h>
+#include "LCD_st7735.h"
 
 #define UART_ID uart0
 #define BAUD_RATE 115200
@@ -101,11 +102,21 @@ int main() {
 
   gpio_put(LED_PIN, !gpio_get(LED_PIN));
 
+  ST7735_Init();
+  ST7735_DrawImage(0, 0, 80, 160, arducam_logo);
+
   SetupIMU();
 
   ei_impulse_result_t result = {nullptr};
 
   gpio_put(LED_PIN, !gpio_get(LED_PIN));
+
+  ST7735_FillScreen(ST7735_GREEN);
+
+  ST7735_DrawImage(0,0,80,40,(uint8_t*)IMU_ICM20948);
+
+  ST7735_WriteString(5, 45, "Magic", Font_11x18, ST7735_BLACK, ST7735_GREEN);
+  ST7735_WriteString(30, 70, "Wand", Font_11x18, ST7735_BLACK, ST7735_GREEN);
 
   while (true) {
     gpio_put(LED_PIN, !gpio_get(LED_PIN));
@@ -124,7 +135,6 @@ int main() {
       UpdateStroke(gyroscope_samples_read, &done_just_triggered);
       if (linked) {
         if (first) {
-          sleep_ms(5000);
           first = false;
         }
         if (send_index++ % 16 == 0) {
@@ -175,13 +185,6 @@ int main() {
       for (int i = 0; i < EI_CLASSIFIER_NN_INPUT_FRAME_SIZE; i++) {
         float tmp = ((float)raster_buffer[i] + 128.0) / 255.0;
         features_matrix.buffer[i] = tmp;
-        //        features_matrix.buffer[i]=change(features_matrix.buffer[i]);
-        /*
-        ei_printf("%.2f ",tmp);
-        if ((i+1)%32==0){
-          ei_printf("\n");
-        }
-         */
       }
       ei_printf("\n");
 
@@ -217,6 +220,13 @@ int main() {
         }
       }
       ei_printf("\nFound %s (%0.2f)\n",max_index,max_score*100);
+      char str[10];
+      sprintf(str, "%d%%", (int )(max_score*100));
+
+      ST7735_FillRectangle(0, 90, ST7735_WIDTH, 160 - 90, ST7735_GREEN);
+      ST7735_WriteString(35, 100, max_index, Font_11x18, ST7735_BLACK,
+                         ST7735_GREEN);
+      ST7735_WriteString(25, 130, str, Font_11x18, ST7735_BLACK, ST7735_GREEN);
 
 
 #if EI_CLASSIFIER_HAS_ANOMALY == 1

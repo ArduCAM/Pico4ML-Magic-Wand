@@ -13,7 +13,8 @@ pico_sdk_init()
 
 add_subdirectory(ICM20948)
 include_directories(ICM20948)
-
+add_subdirectory(LCD_st7735)
+include_directories(LCD_st7735)
 
 add_executable(magic_wand
   source/main.cpp
@@ -25,7 +26,7 @@ add_executable(magic_wand
 
 include(${MODEL_FOLDER}/edge-impulse-sdk/cmake/utils.cmake)
 
-target_link_libraries(magic_wand pico_stdlib ICM20948)
+target_link_libraries(magic_wand pico_stdlib ICM20948 LCD_st7735)
 
 # enable usb output, disable uart output
 pico_enable_stdio_usb(magic_wand 1)
